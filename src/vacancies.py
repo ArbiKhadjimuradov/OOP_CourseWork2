@@ -1,5 +1,7 @@
 class Vacancies:
     """Класс для работы с вакансиями"""
+    __list_vacancies: list = []
+
     def __init__(self, name: str, salary: int, description: str, url: str):
         self.name = name
         self.salary = salary if salary is not None else "Зарплата не указана"
@@ -12,20 +14,17 @@ class Vacancies:
         return (f"Вакансия: {self.name}\n ссылка: {self.url}\n зарплата: {self.salary}\n "
                 f"описание: {self.description}")
 
-    def __validate(self):
-        # Проверяем, указан ли заголовок вакансии
-        if not isinstance(self.name, str) or not self.name.strip():
-            raise ValueError("Название вакансии должно быть непустой строкой.")
+    def __validate(self, salary):
+        """Метод валидации зарплаты"""
+        if salary is not None:
+            self.__salary = salary
+            if type(salary) is str:
+                salary_split = salary.split(" ")
+                self.__salary = {"from": int(salary_split[0]), "to": int(salary_split[2])}
+        else:
+            self.__salary = {"from": 0, "to": 0}
 
-        # Проверяем, указана ли ссылка на вакансию
-        if not isinstance(self.url, str) or not self.url.strip():
-            raise ValueError("Ссылка на вакансию должна быть непустой строкой.")
-
-        # Проверяем зарплату
-        if isinstance(self.salary, (int, float)) and self.salary < 0:
-            raise ValueError("Зарплата не может быть отрицательной.")
-        elif not isinstance(self.salary, (int, float, str)):
-            raise ValueError("Зарплата должна быть числом или строкой 'Зарплата не указана'.")
+        return self.__salary
 
     def __eq__(self, other: object) -> bool:
         """Сравнение вакансий по зарплате равно"""
@@ -43,6 +42,13 @@ class Vacancies:
 
     def __repr__(self):
         return f"Vacancy(name='{self.name}', url='{self.url}', salary={self.salary}, description='{self.description}')"
+
+    @classmethod
+    def filtered_salary(cls, from_salary: int = 0, to_salary: int = float("inf")):
+        """Метод фильтрации вакансий по зарплате (от и до вилка)"""
+        for vacancies in cls.__list_vacancies:
+            if vacancies["salary"].get("from", 0) >= from_salary and vacancies["salary"]["to"] <= to_salary:
+                print(vacancies)
 
 
 if __name__ == "__main__":

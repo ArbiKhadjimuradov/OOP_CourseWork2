@@ -4,10 +4,10 @@ from typing import Any
 from src.hh_ru_api import HH_API
 from src.open import PATH_TO_FILE
 from src.vacancies import Vacancies
-from src.files.base_file import VacancyRepository
+from src.files.base_file import BaseJsonSaver
 
 
-class JsonVacancyRepository(VacancyRepository):
+class JsonVacancyRepository(BaseJsonSaver):
     """Класс работы с файлами"""
     file = PATH_TO_FILE
 

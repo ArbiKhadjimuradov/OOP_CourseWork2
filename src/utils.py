@@ -50,6 +50,6 @@ def save_filtered_vacancies(vacancies_top: Any, repository):
     if not vacancies_top:
         print("Нет вакансий для сохранения.")
         return
-    os.makedirs(os.path.dirname(repository.file_path), exist_ok=True)
+    os.makedirs(os.path.dirname(repository.file_saver), exist_ok=True)
     # Сохраняем вакансии, преобразуя их в словари
     repository.save_data([vacancy.__dict__ for vacancy in vacancies_top])

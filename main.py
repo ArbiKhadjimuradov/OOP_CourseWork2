@@ -1,8 +1,8 @@
 from src.hh_ru_api import HH_API
 from src.open import PATH_TO_FILE
-from src.utils import (display_vacancies, filter_keyword, filter_salary,
-                       save_filtered_vacancies, top_vacancies)
-from src.files.file_hh_data import JsonVacancyRepository
+from src.utils import (display_vacancies, filter_keyword, filter_salary, top_vacancies)
+from src.json_save import JSONSaver
+from src.vacancies import Vacancies
 
 
 def user_interaction() -> None:
@@ -34,11 +34,28 @@ def user_interaction() -> None:
         result = display_vacancies(vacancies_top)
 
         file_path = PATH_TO_FILE
-        repository = JsonVacancyRepository(file_path)
-        save_filtered_vacancies(vacancies_top, repository)
+        JSONSaver(file_path)
 
         return result
 
+    vacancy = Vacancies(
+        "Python Developer",
+        "<https://hh.ru/vacancy/123456>",
+        "100 000-150 000 руб.",
+        "Требования: опыт работы от 3 лет...",
+    )
 
-if __name__ == '__main__':
+    Vacancies.validate_salary()
+    # Сохранение информации о вакансиях в файл
+    json_saver = JSONSaver()
+    json_saver.add_vacancy(vacancy)
+    json_saver.delete_vacancy(vacancy)
+
+    #  циклом создаем каждый словарь обьектом класса Vacancy
+    for filtered_vacancy in [tuple(d.values()) for d in top_vacancies]:
+        vacancy_obj = Vacancies(*filtered_vacancy)
+        json_saver.add_vacancy(vacancy_obj)
+
+
+if __name__ == "__main__":
     user_interaction()
