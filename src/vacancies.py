@@ -4,7 +4,7 @@ class Vacancies:
 
     def __init__(self, name: str, salary: int, description: str, url: str):
         self.name = name
-        self.salary = salary if salary is not None else "Зарплата не указана"
+        self.__salary = self.__validate(salary)
         self.description = description
         self.url = url
 
@@ -17,14 +17,14 @@ class Vacancies:
     def __validate(self, salary):
         """Метод валидации зарплаты"""
         if salary is not None:
-            self.__salary = salary
+            self.salary = salary
             if type(salary) is str:
                 salary_split = salary.split(" ")
-                self.__salary = {"from": int(salary_split[0]), "to": int(salary_split[2])}
+                self.salary = {"from": int(salary_split[0]), "to": int(salary_split[2])}
         else:
-            self.__salary = {"from": 0, "to": 0}
+            self.salary = {"from": 0, "to": 0}
 
-        return self.__salary
+        return self.salary
 
     def __eq__(self, other: object) -> bool:
         """Сравнение вакансий по зарплате равно"""
